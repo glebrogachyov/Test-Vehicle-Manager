@@ -1,22 +1,23 @@
 from vehicle_manager import Vehicle, VehicleManager
 
 
-manager = VehicleManager(url="https://test.tspb.su/test-task")
+# manager = VehicleManager(url="https://test.tspb.su/test-task")
+manager = VehicleManager(url="https://webhook.site/6a364a7c-2e55-4314-960c-e46303203c46")
 
 
 # Получение списка всех автомобилей
-manager.get_vehicles()
+# manager.get_vehicles()
 # [<Vehicle: Toyota Camry 2021 red 21000>, ...]
-
+# exit()
 # Получение списка автомобилей, у которых поле name равно 'Toyota'
-manager.filter_vehicles(params={"name": "Toyota"})
+# manager.filter_vehicles(params={"name": "Toyota"})
 # [<Vehicle: Toyota Camry 2021 red 21000>]
-exit()
+# exit()
 
 # Получение автомобиля с id=1
 manager.get_vehicle(vehicle_id=1)
 # <Vehicle: Toyota Camry 2021 red 21000>
-
+exit()
 # Добавление нового автомобиля в базу данных
 manager.add_vehicle(
     vehicle=Vehicle(

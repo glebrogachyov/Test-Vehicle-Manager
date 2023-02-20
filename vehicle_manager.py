@@ -32,6 +32,7 @@ class VehicleManager:
         print("status_code:", response.status_code)
         print("headers:", response.headers)
         print("text:", response.text)
+        self._vehicles = self.json_load_list_items(self.json_split_list(response.text))
 
     def filter_vehicles(self, params: dict):
         print(params)
@@ -41,7 +42,9 @@ class VehicleManager:
             print(param)
 
     def get_vehicle(self, vehicle_id: int):
-        pass
+        response = requests.get(self._url + f"{vehicle_id}")
+        vehicle = self.json_load_one_item(response.text.strip('"'))
+        print(vehicle)
 
     def add_vehicle(self, vehicle: Vehicle):
         pass
@@ -57,3 +60,30 @@ class VehicleManager:
 
     def get_nearest_vehicle(self, id: int):
         pass
+
+    @staticmethod
+    def json_split_list(json_str: str):
+        json_str = json_str.strip()
+        if not json_str.startswith("[{") and json_str.startswith("}]"):
+            return "wrong json list"
+        return json_str[2:-2].replace(", ", ",").split("},{")
+
+    def json_load_list_items(self, items_list: list[str]) -> list[Vehicle]:
+        result = []
+        for item in items_list:
+            result.append(Vehicle(**self.json_load_one_item(item)))
+        return result
+
+    def json_load_one_item(self, k_v_pairs: str):
+        tmp_item = {}
+        pairs = k_v_pairs[1:-1].split(",")
+        for idx, pair in enumerate(pairs):
+            key, value = pair.split(":")
+            key = key.strip('"')
+            if type_ := self._params.get(key):
+                if type_ == str:
+                    value = value.strip('"')
+                tmp_item[key] = type_(value)
+            else:
+                raise KeyError("error. wrong fields in json.")
+        return tmp_item
